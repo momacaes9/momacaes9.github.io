@@ -25,6 +25,7 @@
   --panel-border: rgba(255, 255, 255, 0.1);
   --shadow: rgba(0, 0, 0, 0.6);
   --cursor-ring: rgba(238, 235, 227, 0.45);
+  --film: rgba(238, 235, 227, 0.16);
   --radius: 18px;
   --max: 1120px;
   --gutter: clamp(20px, 5vw, 48px);
@@ -61,6 +62,7 @@
     --panel-border: rgba(19, 41, 75, 0.12);
     --shadow: rgba(19, 41, 75, 0.22);
     --cursor-ring: rgba(19, 41, 75, 0.45);
+    --film: rgba(19, 41, 75, 0.18);
     color-scheme: light;
   }
 }
@@ -89,6 +91,7 @@
   --panel-border: rgba(19, 41, 75, 0.12);
   --shadow: rgba(19, 41, 75, 0.22);
   --cursor-ring: rgba(19, 41, 75, 0.45);
+  --film: rgba(19, 41, 75, 0.18);
   color-scheme: light;
 }
 
@@ -415,13 +418,14 @@ main {
 .section {
   max-width: var(--max);
   margin: 0 auto;
-  padding: clamp(80px, 12vw, 150px) var(--gutter) 0;
+  padding: clamp(56px, 8vw, 96px) var(--gutter) 0;
   scroll-margin-top: 64px;
 }
 .section-head {
   display: flex;
-  align-items: baseline;
-  gap: 18px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
   margin-bottom: clamp(32px, 5vw, 56px);
   padding-bottom: 18px;
   border-bottom: 1px solid var(--line);
@@ -1170,5 +1174,125 @@ main {
     overflow: hidden;
     clip: rect(0 0 0 0);
     white-space: nowrap;
+  }
+}
+
+/* ---------- film touches: slate labels + strip dividers ---------- */
+.slate {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--fill);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.slate-clap {
+  width: 22px;
+  background: repeating-linear-gradient(-45deg, var(--text) 0 4px, transparent 4px 8px);
+  opacity: 0.55;
+  border-right: 1px solid var(--line);
+}
+.slate-text {
+  padding: 5px 11px;
+  color: var(--accent-ink);
+}
+.film-strip {
+  height: 16px;
+  margin: clamp(56px, 8vw, 96px) max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter))) 0;
+  border-radius: 3px;
+  background-color: var(--film);
+  background-image:
+    repeating-linear-gradient(90deg, var(--bg) 0 6px, transparent 6px 16px),
+    repeating-linear-gradient(90deg, var(--bg) 0 6px, transparent 6px 16px),
+    repeating-linear-gradient(90deg, transparent 0 118px, var(--bg) 118px 120px);
+  background-size: 100% 3px, 100% 3px, 100% 6px;
+  background-position: 4px 3px, 4px calc(100% - 3px), 0 50%;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+}
+
+/* ---------- language toggle ---------- */
+.lang-toggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--fill);
+}
+.lang-toggle button {
+  border: 0;
+  background: none;
+  padding: 7px 11px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.25s, color 0.25s;
+}
+.lang-toggle button:hover {
+  color: var(--text);
+}
+.lang-toggle button.on {
+  background: var(--carolina);
+  color: var(--on-accent);
+}
+.flag {
+  font-size: 1.05em;
+  line-height: 1;
+}
+
+/* ---------- about origin, school logos, project notes, honors org ---------- */
+.lede p.origin {
+  font: 500 0.92rem/1.4 var(--sans);
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.lede .origin + p {
+  margin-top: 0;
+  color: var(--text);
+}
+.school {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+.school-logo {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.school-logo img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+.project-note {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+.h-org {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .lang-toggle button {
+    padding: 6px 9px;
   }
 }

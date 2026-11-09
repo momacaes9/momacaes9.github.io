@@ -1,21 +1,24 @@
 import { useState } from 'react';
-import { links } from '../data/site';
+import { links, sectionIds } from '../data/site';
+import { useLang } from '../lib/i18n';
 import { Item, Section } from './ui';
 
-// Read at build time from frontend/.env (see .env.example). Note: this ID is
-// public in the built site; protect the form in the Formspree dashboard
-// (allowed domains + spam filtering).
+// Read at build time from frontend/.env locally, or the FORMSPREE_ID secret in
+// GitHub Actions. This ID is public in the built site; protect the form in the
+// Formspree dashboard (allowed domains + spam filtering).
 const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID;
 
-const contactLinks = [
-  { label: 'Email', value: links.email, href: `mailto:${links.email}` },
-  { label: 'LinkedIn', value: 'in/monicamacaes', href: links.linkedin },
-  { label: 'GitHub', value: 'momacaes9', href: links.github },
-  { label: 'Resume', href: links.resume },
-];
-
 export default function Contact() {
+  const { c } = useLang();
+  const f = c.ui.form;
   const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+
+  const contactLinks = [
+    { label: c.ui.contactLinks.email, value: links.email, href: `mailto:${links.email}` },
+    { label: c.ui.contactLinks.linkedin, value: 'in/monicamacaes', href: links.linkedin },
+    { label: c.ui.contactLinks.github, value: 'momacaes9', href: links.github },
+    { label: c.ui.contactLinks.resume, href: links.resume },
+  ];
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +39,7 @@ export default function Contact() {
           name: data.name,
           email: data.email,
           message: data.message,
-          subject: `Portfolio contact — ${data.name}`,
+          subject: `${f.subject} — ${data.name}`,
         }),
       });
       if (!res.ok) throw new Error(String(res.status));
@@ -48,40 +51,40 @@ export default function Contact() {
   };
 
   return (
-    <Section id="contact" eyebrow="07" title="Contact" className="contact">
+    <Section id="contact" take={sectionIds.indexOf('contact') + 1} title={c.sections.contact} className="contact">
       <Item className="lede">
-        <p>Say hello by email, on LinkedIn, or with the form below.</p>
+        <p>{c.ui.contactLede}</p>
       </Item>
       <div className="contact-grid">
         <Item as="form" className="contact-form card" onSubmit={onSubmit}>
           <label>
-            <span>Name</span>
-            <input name="name" type="text" required maxLength={80} autoComplete="name" placeholder="Your name" />
+            <span>{f.name}</span>
+            <input name="name" type="text" required maxLength={80} autoComplete="name" placeholder={f.namePh} />
           </label>
           <label>
-            <span>Email</span>
-            <input name="email" type="email" required maxLength={120} autoComplete="email" placeholder="you@example.com" />
+            <span>{f.email}</span>
+            <input name="email" type="email" required maxLength={120} autoComplete="email" placeholder={f.emailPh} />
           </label>
           <label>
-            <span>Message</span>
-            <textarea name="message" required maxLength={2000} rows={5} placeholder="Write your message…" />
+            <span>{f.message}</span>
+            <textarea name="message" required maxLength={2000} rows={5} placeholder={f.messagePh} />
           </label>
           <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="honeypot" aria-hidden="true" />
           <button type="submit" className="btn" disabled={status === 'sending'}>
-            {status === 'sending' ? 'Sending…' : 'Send message'}
+            {status === 'sending' ? f.sending : f.send}
           </button>
           <p className="form-status" role="status" aria-live="polite">
-            {status === 'sent' && 'Message sent — thank you!'}
+            {status === 'sent' && f.sent}
             {status === 'error' && (
               <>
-                Couldn’t send right now. Please email <a href={`mailto:${links.email}`}>{links.email}</a>.
+                {f.error} <a href={`mailto:${links.email}`}>{links.email}</a>.
               </>
             )}
           </p>
         </Item>
         <Item as="ul" className="contact-links">
           {contactLinks.map((l) => (
-            <li key={l.label}>
+            <li key={l.href}>
               <a href={l.href} target={l.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">
                 <span>{l.label}</span>
                 <span className="muted">{l.value || '↗'}</span>

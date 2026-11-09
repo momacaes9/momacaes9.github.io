@@ -1,11 +1,12 @@
 import kb from '../data/about-monica.json';
 
 /*
- * answerQuestion(question) -> Promise<{ text, section?, matched }>
+ * answerQuestion(question, lang) -> Promise<{ text, section?, matched }>
  *
  * Answers locally from about-monica.json only: no network, no API key, no AI
- * service. Matching order: exact question, keyword overlap, then typo-tolerant
- * fuzzy keywords. Anything else gets the polite fallback with contact links.
+ * service. Questions in English or Portuguese both match; the answer comes in
+ * the selected language. Matching order: exact question, keyword overlap,
+ * then typo-tolerant fuzzy keywords. Anything else gets the polite fallback.
  */
 
 const normalize = (s) =>
@@ -38,8 +39,15 @@ function typoDistance(a, b) {
   return d[a.length][b.length];
 }
 
-const STOP = new Set(['what', 'does', 'that', 'this', 'with', 'have', 'about', 'tell', 'your', 'from', 'when', 'where', 'which', 'there', 'their', 'would', 'could', 'should', 'know', 'like', 'please']);
-const GREETING = /^(hi|hello|hey|hiya|oi|ola|good (morning|afternoon|evening))\b/;
+const STOP = new Set([
+  'what', 'does', 'that', 'this', 'with', 'have', 'about', 'tell', 'your', 'from', 'when', 'where', 'which', 'there',
+  'their', 'would', 'could', 'should', 'know', 'like', 'please', 'monica',
+  'sobre', 'como', 'qual', 'quais', 'para', 'esta', 'voce', 'dela', 'onde', 'isso', 'essa', 'esse', 'pode', 'sabe',
+  'quero', 'saber', 'ela', 'tem', 'faz',
+]);
+const GREETING = /^(hi|hello|hey|hiya|oi|ola|bom dia|boa tarde|boa noite|good (morning|afternoon|evening))\b/;
+
+const pick = (field, lang) => field[lang] || field.en;
 
 function keywordScore(topic, q, tokens) {
   let score = 0;
@@ -53,13 +61,16 @@ function keywordScore(topic, q, tokens) {
   return score;
 }
 
-export function localAnswer(question) {
+const reply = (t, lang) => ({ text: pick(t.answer, lang), section: t.section, matched: true });
+
+export function localAnswer(question, lang = 'en') {
+  const fallback = { text: pick(kb.fallback, lang), section: 'contact', matched: false };
   const q = normalize(question);
-  if (!q) return { text: kb.fallback, section: 'contact', matched: false };
+  if (!q) return fallback;
 
   // 1. Exact match on a known question (e.g. the suggestion chips).
   const exact = topics.find((t) => t.nQuestions.includes(q));
-  if (exact) return { text: exact.answer, section: exact.section, matched: true };
+  if (exact) return reply(exact, lang);
 
   // 2. Keyword overlap.
   const tokens = new Set(q.split(' '));
@@ -72,36 +83,35 @@ export function localAnswer(question) {
       bestScore = s;
     }
   }
-  if (best) return { text: best.answer, section: best.section, matched: true };
+  if (best) return reply(best, lang);
 
   // 3. Fuzzy keyword match for typos.
   const votes = {};
   for (const tok of tokens) {
     if (tok.length < 4 || STOP.has(tok)) continue;
     const allowed = tok.length >= 7 ? 2 : 1;
-    let best = null;
+    let near = null;
     for (const s of singleKeywords) {
       const dist = typoDistance(tok, s.k);
-      if (dist <= allowed && (!best || dist < best.dist)) best = { id: s.id, dist };
+      if (dist <= allowed && (!near || dist < near.dist)) near = { id: s.id, dist };
     }
-    if (best) votes[best.id] = (votes[best.id] || 0) + 1 / (1 + best.dist);
+    if (near) votes[near.id] = (votes[near.id] || 0) + 1 / (1 + near.dist);
   }
   const top = Object.entries(votes).sort((a, b) => b[1] - a[1])[0];
-  if (top) {
-    const t = topics.find((x) => x.id === top[0]);
-    return { text: t.answer, section: t.section, matched: true };
-  }
+  if (top) return reply(topics.find((x) => x.id === top[0]), lang);
 
-  // 4. A greeting gets the intro instead of the fallback.
-  if (GREETING.test(q)) {
-    return { text: `Hi! ${kb.summary} Try one of the suggested questions.`, matched: true };
-  }
+  // 4. A greeting gets a friendly nudge instead of the fallback.
+  if (GREETING.test(q)) return { text: pick(kb.greetingReply, lang), matched: true };
 
-  return { text: kb.fallback, section: 'contact', matched: false };
+  return fallback;
 }
 
-export async function answerQuestion(question) {
-  return localAnswer(question);
+export async function answerQuestion(question, lang) {
+  return localAnswer(question, lang);
 }
 
-export const chatIntro = { greeting: kb.greeting, summary: kb.summary, suggestions: kb.suggestions };
+export const chatIntro = (lang) => ({
+  greeting: pick(kb.greeting, lang),
+  summary: pick(kb.summary, lang),
+  suggestions: pick(kb.suggestions, lang),
+});

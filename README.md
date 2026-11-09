@@ -1,8 +1,8 @@
 # Monica Macaes
 
-**Live:** [monicamacaes.github.io](https://monicamacaes.github.io)
+**Live:** [momacaes9.github.io](https://momacaes9.github.io)
 
-Personal portfolio of Monica Macaes, Economics & Data Science student at UNC-Chapel Hill.
+Personal portfolio of Monica Macaes, Economics & Data Science student at UNC-Chapel Hill, in English and Portuguese.
 
 ![React](https://img.shields.io/badge/React-13294B?style=flat-square&logo=react&logoColor=4B9CD3)
 ![JavaScript](https://img.shields.io/badge/JavaScript-13294B?style=flat-square&logo=javascript&logoColor=4B9CD3)

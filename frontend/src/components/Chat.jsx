@@ -2,24 +2,39 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { answerQuestion, chatIntro } from '../lib/answer';
 import { usePrefersReducedMotion } from '../lib/hooks';
+import { useLang } from '../lib/i18n';
 import { scrollToId } from '../lib/scroll';
 
-const firstMessage = { from: 'bot', text: `${chatIntro.greeting}\n${chatIntro.summary}` };
+const firstMessage = (lang) => {
+  const intro = chatIntro(lang);
+  return { from: 'bot', text: `${intro.greeting}\n${intro.summary}` };
+};
 
 // Open by default on desktop; a small bubble on phones and tablets.
 const startsOpen = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 900px)').matches;
 
 export default function Chat() {
   const reduced = usePrefersReducedMotion();
+  const { lang, c } = useLang();
+  const t = c.ui.chat;
   const [open, setOpen] = useState(startsOpen);
   const userOpened = useRef(false);
-  const [messages, setMessages] = useState([firstMessage]);
+  const [messages, setMessages] = useState(() => [firstMessage(lang)]);
   const [typing, setTyping] = useState(false);
   const [input, setInput] = useState('');
   const [asked, setAsked] = useState(() => new Set());
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const launcherRef = useRef(null);
+  const shownLang = useRef(lang);
+
+  // Switching language restarts the conversation in that language.
+  useEffect(() => {
+    if (shownLang.current === lang) return;
+    shownLang.current = lang;
+    setMessages([firstMessage(lang)]);
+    setAsked(new Set());
+  }, [lang]);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: reduced ? 'auto' : 'smooth' });
@@ -47,14 +62,14 @@ export default function Chat() {
     setMessages((m) => [...m, { from: 'me', text: q }]);
     setTyping(true);
     const [reply] = await Promise.all([
-      answerQuestion(q),
+      answerQuestion(q, lang),
       new Promise((r) => setTimeout(r, reduced ? 150 : 650 + Math.random() * 450)),
     ]);
     setTyping(false);
     setMessages((m) => [...m, { from: 'bot', text: reply.text, contact: !reply.matched }]);
   };
 
-  const chips = chatIntro.suggestions.filter((s) => !asked.has(s));
+  const chips = chatIntro(lang).suggestions.filter((s) => !asked.has(s));
 
   return (
     <>
@@ -67,10 +82,10 @@ export default function Chat() {
         }}
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label="Ask about Monica"
+        aria-label={t.title}
       >
         <span className="spark" aria-hidden="true">✦</span>
-        <span className="launcher-text">Ask about Monica</span>
+        <span className="launcher-text">{t.title}</span>
       </button>
 
       <AnimatePresence>
@@ -78,7 +93,7 @@ export default function Chat() {
           <motion.div
             className="chat-panel"
             role="dialog"
-            aria-label="Ask about Monica"
+            aria-label={t.title}
             initial={reduced ? false : { opacity: 0, y: 20, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.97 }}
@@ -87,10 +102,10 @@ export default function Chat() {
           >
             <div className="chat-head">
               <div>
-                <strong>Ask about Monica</strong>
-                <span className="muted">Answers only from this site · no AI service</span>
+                <strong>{t.title}</strong>
+                <span className="muted">{t.sub}</span>
               </div>
-              <button className="icon-btn" onClick={() => setOpen(false)} aria-label="Close chat">
+              <button className="icon-btn" onClick={() => setOpen(false)} aria-label={t.close}>
                 ×
               </button>
             </div>
@@ -109,13 +124,13 @@ export default function Chat() {
                         scrollToId('contact');
                       }}
                     >
-                      Go to Contact →
+                      {t.toContact}
                     </button>
                   )}
                 </div>
               ))}
               {typing && (
-                <div className="bubble bot typing" aria-label="Typing">
+                <div className="bubble bot typing" aria-label={t.typing}>
                   <span />
                   <span />
                   <span />
@@ -144,11 +159,11 @@ export default function Chat() {
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask a question…"
+                placeholder={t.placeholder}
                 maxLength={200}
-                aria-label="Your question"
+                aria-label={t.question}
               />
-              <button type="submit" className="send" disabled={!input.trim() || typing} aria-label="Send">
+              <button type="submit" className="send" disabled={!input.trim() || typing} aria-label={t.send}>
                 ↑
               </button>
             </form>

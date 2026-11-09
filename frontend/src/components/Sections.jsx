@@ -1,12 +1,14 @@
 import { Fragment, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { about, education, experience, hero, honors, links, projects, skills } from '../data/site';
+import { links, sectionIds } from '../data/site';
 import { usePrefersReducedMotion } from '../lib/hooks';
+import { useLang } from '../lib/i18n';
 import { scrollToId } from '../lib/scroll';
 import { Item, Section, SpotlightCard, Tags } from './ui';
 
 const StarField = lazy(() => import('./StarField'));
 const ease = [0.22, 1, 0.36, 1];
+const take = (id) => sectionIds.indexOf(id) + 1;
 
 // Splits text into words that fade and rise in one after another.
 function Words({ text, start = 0, step = 0.06, reduced }) {
@@ -27,6 +29,8 @@ function Words({ text, start = 0, step = 0.06, reduced }) {
 
 export function Hero() {
   const reduced = usePrefersReducedMotion();
+  const { c, lang } = useLang();
+  const { hero } = c;
   const fade = (delay) =>
     reduced ? {} : { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 1, delay, ease } };
   return (
@@ -36,7 +40,7 @@ export function Hero() {
       </Suspense>
       <div className="hero-inner">
         <div className="hero-text">
-          <motion.p className="motto" {...fade(0.05)}>
+          <motion.p className="motto" key={`motto-${lang}`} {...fade(0.05)}>
             {hero.motto}
           </motion.p>
           <h1 aria-label={`${hero.first} ${hero.last}`}>
@@ -47,7 +51,8 @@ export function Hero() {
               </em>
             </span>
           </h1>
-          <p className="tagline">
+          {/* key: replay the word reveal when the language changes */}
+          <p className="tagline" key={`tagline-${lang}`}>
             <Words text={hero.tagline} start={0.55} step={0.035} reduced={reduced} />
           </p>
         </div>
@@ -68,7 +73,7 @@ export function Hero() {
           scrollToId('about');
         }}
       >
-        <span>scroll</span>
+        <span>{c.ui.scroll}</span>
         <span className="scroll-line" aria-hidden="true" />
       </a>
     </header>
@@ -76,19 +81,27 @@ export function Hero() {
 }
 
 export function About() {
+  const { c, lang } = useLang();
+  const { about } = c;
   return (
-    <Section id="about" eyebrow="01" title="About">
+    <Section id="about" take={take('about')} title={c.sections.about}>
       <div className="about-grid">
         <Item className="lede">
+          <p className="origin">
+            <span className="flag" role="img" aria-label={lang === 'pt' ? 'Bandeira do Brasil' : 'Flag of Brazil'}>
+              🇧🇷
+            </span>{' '}
+            {about.origin}
+          </p>
           {about.intro.map((p) => (
             <p key={p}>{p}</p>
           ))}
         </Item>
         <Item>
-          <h3 className="sub">Currently</h3>
+          <h3 className="sub">{about.currentTitle}</h3>
           <ul className="current">
-            {about.current.map((c) => (
-              <li key={c}>{c}</li>
+            {about.current.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </Item>
@@ -98,14 +111,22 @@ export function About() {
 }
 
 export function Education() {
+  const { c } = useLang();
   return (
-    <Section id="education" eyebrow="02" title="Education">
+    <Section id="education" take={take('education')} title={c.sections.education}>
       <ol className="timeline">
-        {education.map((e) => (
+        {c.education.map((e) => (
           <Item as="li" key={e.school} className="timeline-row">
-            <div className="row-meta">{e.dates || ''}</div>
+            <div className="row-meta">{e.dates}</div>
             <div>
-              <h3>{e.school}</h3>
+              <h3 className="school">
+                {e.logo && (
+                  <span className="school-logo">
+                    <img src={e.logo.src} alt={e.logo.alt} width={e.logo.w} height={e.logo.h} loading="lazy" />
+                  </span>
+                )}
+                <span>{e.school}</span>
+              </h3>
               <p>{e.detail}</p>
             </div>
           </Item>
@@ -116,10 +137,11 @@ export function Education() {
 }
 
 export function Experience() {
+  const { c } = useLang();
   return (
-    <Section id="experience" eyebrow="03" title="Experience">
+    <Section id="experience" take={take('experience')} title={c.sections.experience}>
       <div className="card-grid exp-grid">
-        {experience.map((job) => (
+        {c.experience.map((job) => (
           <SpotlightCard as="article" key={job.org} className={`exp-card ${job.summary ? '' : 'compact'}`}>
             <p className="org">{job.org}</p>
             <h3>{job.role}</h3>
@@ -132,10 +154,11 @@ export function Experience() {
 }
 
 export function Projects() {
+  const { c } = useLang();
   return (
-    <Section id="projects" eyebrow="04" title="Projects">
+    <Section id="projects" take={take('projects')} title={c.sections.projects}>
       <div className="card-grid projects">
-        {projects.map((p) => {
+        {c.projects.map((p) => {
           const linkProps = p.href
             ? { as: 'a', href: p.href, target: '_blank', rel: 'noopener noreferrer', 'data-cursor': 'view' }
             : { as: 'article' };
@@ -146,6 +169,7 @@ export function Projects() {
               <div className="card-bottom">
                 <Tags items={p.tags} />
                 {p.cta && <span className="cta">{p.cta} ↗</span>}
+                {p.note && <span className="project-note">🔒 {p.note}</span>}
               </div>
             </SpotlightCard>
           );
@@ -156,16 +180,19 @@ export function Projects() {
 }
 
 export function Honors() {
+  const { c } = useLang();
   return (
-    <Section id="honors" eyebrow="05" title="Honors">
+    <Section id="honors" take={take('honors')} title={c.sections.honors}>
       <ol className="honors">
-        {honors.map((h, i) => (
+        {c.honors.map((h, i) => (
           <Item as="li" key={h.title}>
             <span className="num">{String(i + 1).padStart(2, '0')}</span>
-            <span className="h-title">{h.title}</span>
+            <span className="h-title">
+              {h.title}
+              <span className="h-org">{h.org}</span>
+            </span>
             <span className="h-meta">
-              <span className="medal">{h.medal}</span>
-              <span className="year">{h.year}</span>
+              <span className="year">{h.date}</span>
             </span>
           </Item>
         ))}
@@ -175,10 +202,11 @@ export function Honors() {
 }
 
 export function Skills() {
+  const { c } = useLang();
   return (
-    <Section id="skills" eyebrow="06" title="Skills">
+    <Section id="skills" take={take('skills')} title={c.sections.skills}>
       <div className="skills-grid">
-        {Object.entries(skills).map(([group, items]) => (
+        {Object.entries(c.skills).map(([group, items]) => (
           <Item key={group}>
             <h3 className="sub">{group}</h3>
             <Tags items={items} />
@@ -190,9 +218,10 @@ export function Skills() {
 }
 
 export function Footer() {
+  const { c } = useLang();
   return (
     <footer className="footer">
-      <span>© 2026 Monica Macaes · Growing Dreams</span>
+      <span>© 2026 Monica Macaes · {c.hero.motto}</span>
       <span className="footer-links">
         <a href={links.github} target="_blank" rel="noopener noreferrer">
           GitHub ↗

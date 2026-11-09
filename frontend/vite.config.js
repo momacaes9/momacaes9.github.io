@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// base "/" because monicamacaes.github.io is an organization site served from the domain root.
+// base "/" because momacaes9.github.io is a user site served from the domain root.
 export default defineConfig({
   plugins: [react()],
   base: '/',

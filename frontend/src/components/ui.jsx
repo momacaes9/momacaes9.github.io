@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { usePrefersReducedMotion } from '../lib/hooks';
+import { useLang } from '../lib/i18n';
 
 const container = {
   hidden: {},
@@ -10,8 +11,10 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
-// A page section whose direct <Reveal.Item> children fade and rise in, staggered.
-export function Section({ id, eyebrow, title, children, className = '' }) {
+// A page section whose direct <Item> children fade and rise in, staggered.
+// The header is styled like a film slate: "Take 01 · About".
+export function Section({ id, take, title, children, className = '' }) {
+  const { c } = useLang();
   const reduced = usePrefersReducedMotion();
   return (
     <motion.section
@@ -23,7 +26,12 @@ export function Section({ id, eyebrow, title, children, className = '' }) {
       viewport={{ once: true, amount: 0.15 }}
     >
       <motion.header className="section-head" variants={item}>
-        <span className="eyebrow">{eyebrow}</span>
+        <span className="slate" aria-hidden="true">
+          <span className="slate-clap" />
+          <span className="slate-text">
+            {c.ui.take} {String(take).padStart(2, '0')} · {title}
+          </span>
+        </span>
         <h2>{title}</h2>
       </motion.header>
       {children}
@@ -65,4 +73,9 @@ export function Tags({ items }) {
       ))}
     </ul>
   );
+}
+
+// Thin film-strip divider between sections (sprocket holes along both edges).
+export function FilmStrip() {
+  return <div className="film-strip" aria-hidden="true" />;
 }
