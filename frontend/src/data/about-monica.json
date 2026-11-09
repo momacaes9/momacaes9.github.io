@@ -1,0 +1,141 @@
+{
+  "name": "Monica Macaes",
+  "greeting": "Hi! I answer questions about Monica using only what's on this site.",
+  "summary": "Monica Macaes studies Economics & Data Science at UNC-Chapel Hill (BS expected May 2030). She does monetary-policy research for the Fed Challenge team, builds RL datasets at AI@UNC, and develops iOS apps with Carolina App Team.",
+  "suggestions": [
+    "What does she study?",
+    "What is she working on?",
+    "Skills?",
+    "Experience in 3 bullets?",
+    "How to contact her?"
+  ],
+  "fallback": "I don't have that information, so I'd rather not guess. You can ask Monica directly at momacaes@unc.edu, on LinkedIn (linkedin.com/in/monicamacaes), or with the contact form below.",
+  "topics": [
+    {
+      "id": "study",
+      "questions": ["What does she study?", "What does Monica study?", "What is her major?", "Where does she go to university?"],
+      "keywords": ["study", "studies", "studying", "major", "university", "college", "unc", "chapel hill", "degree", "education", "school", "economics", "data science", "graduate", "graduation", "2030", "student"],
+      "answer": "Monica is pursuing a BS in Economics & Data Science at UNC-Chapel Hill, expected May 2030. She will study abroad at UNSW Sydney in Spring 2027.",
+      "section": "education"
+    },
+    {
+      "id": "abroad",
+      "questions": ["Is she studying abroad?", "What is UNSW?"],
+      "keywords": ["abroad", "unsw", "sydney", "australia", "exchange", "2027"],
+      "answer": "Monica will study abroad at UNSW Sydney in Spring 2027.",
+      "section": "education"
+    },
+    {
+      "id": "current",
+      "questions": ["What is she working on?", "What is Monica working on?", "What is she doing now?"],
+      "keywords": ["working", "currently", "current", "now", "lately", "busy", "doing"],
+      "answer": "Right now Monica is:\n• Building the dataset and oracle pod for the Infinite Policy-Based RL project at AI@UNC (Hugging Face Datasets)\n• Doing macroeconomic and monetary-policy research for UNC's College Fed Challenge team\n• Developing iOS apps in Swift with Carolina App Team\n• Building a data chatbot with Supabase + n8n",
+      "section": "experience"
+    },
+    {
+      "id": "skills",
+      "questions": ["Skills?", "What are her skills?", "What tools does she use?", "Does she code?"],
+      "keywords": ["skills", "skill", "tools", "toolbox", "tech", "stack", "python", "sql", "swift", "javascript", "r", "pandas", "numpy", "jupyter", "excel", "git", "github", "vs code", "code", "coding", "programming"],
+      "answer": "Programming: Python, SQL, Swift, JavaScript, R.\nData & tools: pandas, NumPy, Jupyter, Hugging Face, REST APIs, Excel.\nPlatforms: Git, GitHub, Supabase, n8n, VS Code.",
+      "section": "skills"
+    },
+    {
+      "id": "languages",
+      "questions": ["What languages does she speak?", "Does she speak Portuguese?"],
+      "keywords": ["languages", "language", "speak", "speaks", "spoken", "portuguese", "english", "spanish", "french", "italian", "fluent", "native", "brazilian"],
+      "answer": "Monica speaks Portuguese (native), English, Spanish, French and Italian.",
+      "section": "skills"
+    },
+    {
+      "id": "experience",
+      "questions": ["Experience in 3 bullets?", "What is her experience?", "Where has she worked?"],
+      "keywords": ["experience", "experiences", "bullets", "worked", "jobs", "job", "roles", "role", "resume", "cv", "background"],
+      "answer": "• Fed Challenge, Investment Researcher: macroeconomic and monetary-policy research for UNC's College Fed Challenge team.\n• AI@UNC, RL Agent Trainer: builds the dataset and oracle pod for the Infinite Policy-Based RL project.\n• International Consultancy Club, Consultant: client case projects; 1st place in the club's case competition.\nThe Experience section lists all of her roles.",
+      "section": "experience"
+    },
+    {
+      "id": "contact",
+      "questions": ["How to contact her?", "How do I contact her?", "What is her email?", "Is she on LinkedIn?"],
+      "keywords": ["contact", "email", "mail", "reach", "message", "linkedin", "connect", "hire", "talk"],
+      "answer": "Email momacaes@unc.edu, connect on LinkedIn (linkedin.com/in/monicamacaes), see her code on GitHub (github.com/momacaes9), or use the contact form below. Her resume is linked in the Contact section.",
+      "section": "contact"
+    },
+    {
+      "id": "fed",
+      "questions": ["What is the Fed Challenge?", "What does she do at Fed Challenge?"],
+      "keywords": ["fed", "federal reserve", "monetary", "policy", "macro", "macroeconomic", "investment", "researcher", "research"],
+      "answer": "Monica is an Investment Researcher with UNC's College Fed Challenge team, doing macroeconomic and monetary-policy research.",
+      "section": "experience"
+    },
+    {
+      "id": "aiunc",
+      "questions": ["What does she do at AI@UNC?", "What is the RL project?"],
+      "keywords": ["ai", "ai unc", "rl", "reinforcement", "learning", "agent", "trainer", "dataset", "datasets", "oracle", "pod", "hugging face", "huggingface", "infinite", "machine learning", "ml"],
+      "answer": "At AI@UNC Monica is an RL Agent Trainer. She builds the dataset and oracle pod for the Infinite Policy-Based RL project, using Hugging Face Datasets.",
+      "section": "experience"
+    },
+    {
+      "id": "consulting",
+      "questions": ["Does she do consulting?"],
+      "keywords": ["consulting", "consultant", "consultancy", "case", "client", "clients", "women in consulting", "icc"],
+      "answer": "Monica is a Consultant with the International Consultancy Club, working on client case projects, and won 1st place in the club's case competition. She is also a member of Women in Consulting.",
+      "section": "experience"
+    },
+    {
+      "id": "ios",
+      "questions": ["Does she build apps?", "What is Carolina App Team?"],
+      "keywords": ["ios", "app", "apps", "iphone", "mobile", "carolina app team", "developer", "swiftui", "xcode"],
+      "answer": "Monica is an iOS Developer with Carolina App Team, working in Swift.",
+      "section": "experience"
+    },
+    {
+      "id": "brasa",
+      "questions": ["What is BRASA?"],
+      "keywords": ["brasa", "brazilian student association", "operations", "brazil"],
+      "answer": "Monica is an Operations Assistant at BRASA, the Brazilian Student Association.",
+      "section": "experience"
+    },
+    {
+      "id": "viamundi",
+      "questions": ["What is ViaMundi?", "Did she found anything?"],
+      "keywords": ["viamundi", "via mundi", "founder", "cofounder", "co founder", "founded", "admissions", "mentorship", "mentor", "startup"],
+      "answer": "Monica co-founded ViaMundi Education, which offers international admissions mentorship.",
+      "section": "experience"
+    },
+    {
+      "id": "tutoring",
+      "questions": ["Does she tutor?", "Does she teach math?"],
+      "keywords": ["tutor", "tutoring", "teach", "teaching", "math", "preply", "lessons", "hours"],
+      "answer": "Monica is a math tutor on Preply, with 200+ hours of tutoring since Feb 2026.",
+      "section": "experience"
+    },
+    {
+      "id": "sports",
+      "questions": ["Does she run?"],
+      "keywords": ["marathon", "running", "run", "runner", "sport", "sports", "hobby", "hobbies"],
+      "answer": "Monica is a member of the Marathon Team.",
+      "section": "experience"
+    },
+    {
+      "id": "projects",
+      "questions": ["What has she built?", "What projects has she made?"],
+      "keywords": ["projects", "project", "built", "build", "builder", "made", "chatbot", "bot", "supabase", "n8n", "creset", "growth radar", "website", "portfolio", "site"],
+      "answer": "Her projects:\n• Data chatbot built with Supabase + n8n (github.com/momacaes9/n8n)\n• Creset Growth Radar, 1st place in the Product Build Challenge\n• Infinite Policy-Based RL at AI@UNC\n• This website",
+      "section": "projects"
+    },
+    {
+      "id": "honors",
+      "questions": ["What awards has she won?", "Honors?"],
+      "keywords": ["award", "awards", "honor", "honors", "won", "win", "prize", "competition", "competitions", "first place", "finalist", "base44", "t 0", "global youth challenge", "top 16"],
+      "answer": "• 1st place, Product Build Challenge x Creset (Oct 2026)\n• 1st place, International Consultancy Club Case Competition\n• Finalist, T-0 x Base44 $1,000 Challenge (Sep 2026)\n• Top 16, Global Youth Challenge 2026",
+      "section": "honors"
+    },
+    {
+      "id": "who",
+      "questions": ["Who is Monica?", "Tell me about Monica"],
+      "keywords": ["who", "herself", "introduce", "summary", "overview"],
+      "answer": "Monica Macaes studies Economics & Data Science at UNC-Chapel Hill (BS expected May 2030). She does monetary-policy research for the Fed Challenge team, builds RL datasets at AI@UNC, and develops iOS apps with Carolina App Team.",
+      "section": "about"
+    }
+  ]
+}
